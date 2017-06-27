@@ -20,7 +20,7 @@ Date:       June 2017
 
 import os
 from openpyxl import Workbook
-# from openpyxl.styles import Color, PatternFill, Font
+from openpyxl.styles import PatternFill, Font
 from openpyxl.formatting.rule import FormulaRule
 import datetime
 

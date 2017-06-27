@@ -18,11 +18,9 @@ Version:    1.0
 Date:       June 2017
 '''
 
-import SecureCRT
 import os
 from openpyxl import Workbook
-from openpyxl.styles import Color, PatternFill, Font
-# from openpyxl.styles.differential import DifferentialStyle
+# from openpyxl.styles import Color, PatternFill, Font
 from openpyxl.formatting.rule import FormulaRule
 import datetime
 
@@ -55,7 +53,7 @@ def main():
     wb.save(filename=filename)
     ws1 = wb.active
 
-    # Save MAC table output
+    # Prep MAC table output
     ws1.title = 'MAC_Table'
     ws1['A1'] = 'Vendor'
     ws1['B1'] = 'MAC Address'
@@ -67,7 +65,7 @@ def main():
     ws1['E1'] = datetime.datetime.now()
     mac_index = 1
     for row in mac_output.splitlines():
-        if 'DYNAMIC' in row:
+        if 'dynamic' in row.lower():
             mac_index += 1
             row = row.split()
             vlan = row[0]
@@ -75,8 +73,8 @@ def main():
             mac_interface = row[3]
             ws1['A' + str(mac_index)] =\
                 '=VLOOKUP(LEFT(B%s,7),\
-\'/Users/bklotz/Documents/OUI_Table.xlsx\'!Vendor_Table,2,FALSE)' \
-% mac_index
+            \'/Users/bklotz/Documents/OUI_Table.xlsx\'!Vendor_Table,2,FALSE)' \
+            % mac_index
             ws1['B' + str(mac_index)] = mac_addr
             ws1['C' + str(mac_index)] = vlan
             ws1['D' + str(mac_index)] = mac_interface

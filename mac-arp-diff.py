@@ -22,7 +22,7 @@ import SecureCRT
 import os
 from openpyxl import Workbook
 from openpyxl.styles import Color, PatternFill, Font
-from openpyxl.styles.differential import DifferentialStyle
+# from openpyxl.styles.differential import DifferentialStyle
 from openpyxl.formatting.rule import FormulaRule
 import datetime
 
@@ -127,7 +127,6 @@ def CaptureOutputOfCommand(command, prompt):
     script_tab.Screen.Send(command + '\n')
     script_tab.Screen.WaitForString('\n')
     output = script_tab.Screen.ReadString(prompt)
-    #script_tab.Screen.Synchronous = False
     return output
 
 

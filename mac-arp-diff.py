@@ -4,7 +4,7 @@
 '''
 Purpose:    Collect the MAC address table on a switch and write it to an excel
             spreadsheet on one worksheet, then collect the ARP table and write
-            it to a second worksheet. Copy in a worksheet of all IEEE OUIs
+            it to a second worksheet. Reference an external worksheet of OUIs
             and create formulae to display the manufacturer of each MAC, and
             highlight all the MAC addresses that do not have a corresponding
             IP address from the ARP table.
@@ -24,16 +24,22 @@ from openpyxl.styles import PatternFill, Font
 from openpyxl.formatting.rule import FormulaRule
 import datetime
 
-script_tab = crt.GetScriptTab()
-script_tab.Screen.Synchronous = True
-script_tab.Screen.IgnoreEscape = True
-
 
 def main():
+    if not crt.Session.Connected:
+        crt.Dialog.MessageBox(
+            "This script currently requires a valid connection to a "
+            "Cisco Pix firewall or other similar device.\n\n"
+            "Please connect and then run this script again.")
+        return
+    script_tab = crt.GetScriptTab()
+    script_tab.Screen.Synchronous = True
+    script_tab.Screen.IgnoreEscape = True
+
     screenRow = script_tab.Screen.CurrentRow
     screenCol = script_tab.Screen.CurrentColumn
     prompt = script_tab.Screen.Get(screenRow, 1, screenRow, screenCol).strip()
-    if '(config' in prompt:
+    if 'config' in prompt:
         crt.Dialog.MessageBox('Run script from user or priviliged exec only.')
         return
     switch_name = prompt[:-1]
@@ -79,7 +85,7 @@ def main():
             ws1['C' + str(mac_index)] = vlan
             ws1['D' + str(mac_index)] = mac_interface
 
-    # Save ARP output
+    # Prep ARP output
     ws2 = wb.create_sheet(title='ARP_Table')
     ws2['A1'] = 'Vendor'
     ws2['B1'] = 'Address'
